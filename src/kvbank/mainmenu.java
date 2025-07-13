@@ -16,15 +16,14 @@ import javax.swing.JInternalFrame;
  * @author victo
  */
 public class mainmenu extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(mainmenu.class.getName());
 
-    /**
-     * Creates new form mainmenu
-     */
+    private PopupMenu internalFrame;
+
+
     public mainmenu() {
         initComponents();
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
