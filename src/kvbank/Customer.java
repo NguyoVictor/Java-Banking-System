@@ -102,6 +102,11 @@ return name;
         });
 
         jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(0, 0, 255));
@@ -257,7 +262,51 @@ return name;
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+         try {
+            String cust_id =jLabel8.getText();
+            String firstname =txtfname.getText();
+            String lastname =txtlname.getText();
+            String street =txtstreet.getText();
+            String city =txtcity.getText();
+            Branch item = (Branch)txtbranch.getSelectedItem();
+            String mobile =txtmobile.getText();
+
+            Class.forName("com.mysql.jdbc.Driver");
+            con1 = DriverManager.getConnection("jdbc:mysql://localhost:3307/kvbank","victor","nguyo123");
+            insert = con1.prepareStatement("insert into customer(cust_id,firstname,lastname,street,city,branch,phone)values(?,?,?,?,?,?,?)");
+            insert.setString(1,cust_id);
+            insert.setString(2,firstname);
+            insert.setString(3,lastname);
+            insert.setString(4,street);
+            insert.setString(5,city);
+            insert.setInt(6,item.id);
+            insert.setString(7,mobile);
+            insert.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Sucsessfully Saved");
+            autoId();
+            txtfname.setText("");
+            txtlname.setText("");
+            txtstreet.setText("");
+            txtcity.setText("");
+            txtbranch.setSelectedIndex(-1);
+            txtmobile.setText("");
+
+            //   table_update();
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        setVisible(false); //you can't see me!
+dispose();
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -281,11 +330,4 @@ return name;
     private javax.swing.JTextField txtstreet;
     // End of variables declaration//GEN-END:variables
 
-    private void LoadBrand1() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    private void autoId() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-}
+    
