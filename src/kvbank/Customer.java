@@ -2,12 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
-package kvbank;
+package bank;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author victo
@@ -19,8 +25,31 @@ public class Customer extends javax.swing.JInternalFrame {
      */
     public Customer() {
         initComponents();
+        LoadBrand1();
+        autoId();
+        LoadBrand1();
     }
+    
+    
+       Connection con1;
+     PreparedStatement insert;
+    
+      public class Branch 
+{ 
+int id; 
+String name; 
 
+public Branch( int id, String name ) 
+{ 
+this.id = id; 
+this.name = name; 
+} 
+
+public String toString() 
+{ 
+return name; 
+} 
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -182,9 +211,25 @@ public class Customer extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+      public void LoadBrand1()
+{
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con1 = DriverManager.getConnection("jdbc:mysql://localhost:3307/kvbank","victor","nguyo123");
+            insert = con1.prepareStatement("SELECT * FROM branch");
+             ResultSet rs = insert.executeQuery();
+             txtbranch.removeAllItems();
+             while(rs.next())
+             {
+               txtbranch.addItem(new Branch(rs.getInt(1), rs.getString(2) ) );        
+             }
+            
+        } 
+        catch (Exception e) {
+        }
+}
     
-    Connection con;
-    PreparedStatement insert;
+    
     
     
     public void autoID()
@@ -227,4 +272,12 @@ public class Customer extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtlname;
     private javax.swing.JTextField txtstreet;
     // End of variables declaration//GEN-END:variables
+
+    private void LoadBrand1() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void autoId() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
