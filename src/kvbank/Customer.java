@@ -230,18 +230,26 @@ return name;
 }
     
     
-    
-    
-    public void autoID()
+    public void autoId()
     {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost/kvbank", "root","");
-        } catch (ClassNotFoundException ex) {
-            System.getLogger(Customer.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
+             Class.forName("com.mysql.jdbc.Driver");
+             con1 = DriverManager.getConnection("jdbc:mysql://localhost:3307/kvbank","victor","nguyo123");
+            Statement s = con1.createStatement();
+            ResultSet rs = s.executeQuery("SELECT MAX(cust_id) FROM customer");
+            rs.next();
+            rs.getString("MAX(cust_id)");
+            if (rs.getString("MAX(cust_id)") == null) {
+                jLabel8.setText("CS001");     
+            } else {
+                long id = Long.parseLong(rs.getString("MAX(cust_id)").substring(2, rs.getString("MAX(cust_id)").length()));
+                id++;
+                jLabel8.setText("CS" + String.format("%03d", id));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }      
     }
-    
     
     
     
