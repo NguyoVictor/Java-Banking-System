@@ -2,7 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package kvbank;
+package bank;
+
+import java.awt.Desktop;
+import java.awt.PopupMenu;
+import static java.awt.SystemColor.desktop;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 
 /**
  *
@@ -117,9 +124,9 @@ public class mainmenu extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu5);
 
-        jMenu6.setText("Account");
+        jMenu6.setText("Admin");
 
-        jMenuItem8.setText("User Account");
+        jMenuItem8.setText("Account Creation");
         jMenu6.add(jMenuItem8);
 
         jMenuBar1.add(jMenu6);

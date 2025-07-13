@@ -91,12 +91,12 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu6">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Account"/>
+            <Property name="text" type="java.lang.String" value="Admin"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem8">
               <Properties>
-                <Property name="text" type="java.lang.String" value="User Account"/>
+                <Property name="text" type="java.lang.String" value="Account Creation"/>
               </Properties>
             </MenuItem>
           </SubComponents>
