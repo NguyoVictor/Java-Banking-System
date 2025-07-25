@@ -319,6 +319,8 @@ Connection con1;
         // TODO add your handling code here:
         
         try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con1 = DriverManager.getConnection("jdbc:mysql://localhost:3307/kvbank","victor","nguyo123");
            con1.setAutoCommit(false);
              String accno =  txtaccno.getText();
              String cust_id =  jLabel7.getText();
@@ -327,8 +329,7 @@ Connection con1;
             String amount1 =  amount.getText();
             
             
-            Class.forName("com.mysql.jdbc.Driver");
-            con1 = DriverManager.getConnection("jdbc:mysql://localhost:3307/kvbank","victor","nguyo123");
+            
             String queryco1 = "Insert into deposit(acc_id,cust_id,date,balance,deposit)values(?,?,?,?,?)";  
             insert = con1.prepareStatement(queryco1);
             insert.setString(1,accno);
@@ -345,8 +346,9 @@ Connection con1;
              insert2.setString(2,accno);
             
              insert2.executeUpdate(); 
+             con1.commit();
               JOptionPane.showMessageDialog(null,"Amount Deposited...!!!!");
-            con1.commit();
+            
             
         }
         
@@ -354,17 +356,18 @@ Connection con1;
         
         
         catch (SQLException ex) {
-            try {
-                Logger.getLogger(deposit.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(deposit.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+            if (con1 != null && !con1.getAutoCommit()) {
                 con1.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(deposit.class.getName()).log(Level.SEVERE, null, ex1);
             }
-        
-            
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(deposit.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex1) {
+            Logger.getLogger(deposit.class.getName()).log(Level.SEVERE, null, ex1);
         }
+
+    } catch (ClassNotFoundException ex) {
+        Logger.getLogger(deposit.class.getName()).log(Level.SEVERE, null, ex);
+    }
         
         
         
