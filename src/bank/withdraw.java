@@ -324,6 +324,7 @@ Connection con1;
             
             Class.forName("com.mysql.jdbc.Driver");
             con1 = DriverManager.getConnection("jdbc:mysql://localhost:3307/kvbank","victor","nguyo123");
+            con1.setAutoCommit(false);
             String queryco1 = "Insert into withdraw(acc_id,cust_id,date,balance,withdraw)values(?,?,?,?,?)";  
             insert = con1.prepareStatement(queryco1);
             insert.setString(1,accno);
@@ -338,9 +339,9 @@ Connection con1;
              insert2=con1.prepareStatement(sqlupdate);
              insert2.setString(1,amount1);    
              insert2.setString(2,accno);
-            
-             insert2.executeUpdate(); 
-           JOptionPane.showMessageDialog(null,"Amount Withdrawed...!!!!");
+             insert2.executeUpdate();
+             con1.commit();
+           JOptionPane.showMessageDialog(null,"Amount Withdrawn...!!!!");
             con1.commit();
             
             
@@ -352,7 +353,7 @@ Connection con1;
         catch (SQLException ex) {
             Logger.getLogger(withdraw.class.getName()).log(Level.SEVERE, null, ex);
             try {
-                con1.rollback();
+                if (con1 != null) con1.rollback();
             } catch (SQLException ex1) {
                 Logger.getLogger(withdraw.class.getName()).log(Level.SEVERE, null, ex1);
             }
