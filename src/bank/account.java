@@ -203,7 +203,7 @@ Connection con1;
              con1 = DriverManager.getConnection("jdbc:mysql://localhost:3307/kvbank","victor","nguyo123");
 
             Statement s = con1.createStatement();
-            ResultSet rs = s.executeQuery("SELECT MAX(acc_id) FROM account");
+            ResultSet rs = s.executeQuery("SELECT MAX(acc_id) FROM accounts");
             rs.next();
             rs.getString("MAX(acc_id)");
             if (rs.getString("MAX(acc_id)") == null) {
@@ -293,7 +293,7 @@ Connection con1;
            
             Class.forName("com.mysql.jdbc.Driver");
             con1 = DriverManager.getConnection("jdbc:mysql://localhost:3307/kvbank","victor","nguyo123");
-            insert = con1.prepareStatement("insert into account(acc_id,cust_id,acc_type,balance)values(?,?,?,?)");
+            insert = con1.prepareStatement("insert into accounts(acc_id,cust_id,acc_type,balance)values(?,?,?,?)");
             insert.setString(1,id);
             insert.setString(2,custid);
             insert.setString(3,acctype);
