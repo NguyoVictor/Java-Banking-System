@@ -188,7 +188,7 @@ Connection con1;
         try {
             Class.forName("com.mysql.jdbc.Driver");
             con1 = DriverManager.getConnection("jdbc:mysql://localhost:3307/kvbank","victor","nguyo123");
-            insert = con1.prepareStatement("select balance from customer,account where customer.cust_id = account.cust_id and account.acc_id = ?");
+            insert = con1.prepareStatement("select balance from customer,accounts where customer.cust_id = accounts.cust_id and accounts.acc_id = ?");
             insert.setString(1, accno);
             rs1 = insert.executeQuery();
 
@@ -220,58 +220,94 @@ Connection con1;
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:  
-        try {      
-            String faccno=  fano.getText( );
-	    String taccno= toano.getText( );      
-            
-            int balance= Integer.parseInt( txtbal.getText( ));      
-            int amount =Integer.parseInt( txtamount.getText( ));
+        {
+    String faccno = fano.getText().trim();
+    String taccno = toano.getText().trim();
+    String amountStr = txtamount.getText().trim();
+    String balStr = txtbal.getText().trim();
 
-            Class.forName("com.mysql.jdbc.Driver");
-            con1 = DriverManager.getConnection("jdbc:mysql://localhost:3307/kvbank","victor","nguyo123");
-            con1.setAutoCommit(false);
-            PreparedStatement st1=con1.prepareStatement("update account set balance=balance-? where acc_id=?");
-	    st1.setInt(1,amount);
-	    st1.setString(2,faccno);
-	    st1.executeUpdate( );
-                             
-            PreparedStatement st2=con1.prepareStatement("update account set balance=balance+? where acc_id=?");
-	    st2.setInt(1,amount);
-	    st2.setString(2,taccno);
-	    st2.executeUpdate( );
-                
-            PreparedStatement st3=con1.prepareStatement("insert into transfer(f_account,to_account,amount) values(?,?,?)");
-	    st3.setString(1,faccno);
-	    st3.setString(2,taccno);
-	    st3.setInt(3,amount);
-	    st3.executeUpdate( );     
-            JOptionPane.showMessageDialog(this, "Amount Transfer...!!!!!!!");
-                        
-            fano.setText("");
-            toano.setText("");
-            txtamount.setText("");
-            txtbal.setText("");
-                  
-            con1.commit();
+    if (faccno.isEmpty() || taccno.isEmpty() || amountStr.isEmpty() || balStr.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please fill all fields.");
+        return;
+    }
 
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(customer.class.getName()).log(Level.SEVERE, null, ex);
+    if (faccno.equals(taccno)) {
+        JOptionPane.showMessageDialog(this, "From and To account cannot be the same.");
+        return;
+    }
+
+    int amount;
+    int balance;
+
+    try {
+        amount = Integer.parseInt(amountStr);
+        balance = Integer.parseInt(balStr);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Please enter valid numeric values for amount and balance.");
+        return;
+    }
+
+    if (amount <= 0) {
+        JOptionPane.showMessageDialog(this, "Transfer amount must be positive.");
+        return;
+    }
+
+    if (amount > balance) {
+        JOptionPane.showMessageDialog(this, "Insufficient balance for this transfer.");
+        return;
+    }
+
+    try {
+        Class.forName("com.mysql.jdbc.Driver");
+        con1 = DriverManager.getConnection("jdbc:mysql://localhost:3307/kvbank", "victor", "nguyo123");
+        con1.setAutoCommit(false);
+
+        // Verify TO account exists
+        PreparedStatement checkToAcc = con1.prepareStatement("SELECT * FROM accounts WHERE acc_id = ?");
+        checkToAcc.setString(1, taccno);
+        ResultSet toAccRs = checkToAcc.executeQuery();
+        if (!toAccRs.next()) {
+            JOptionPane.showMessageDialog(this, "To Account does not exist.");
+            return;
         }
-        catch (SQLException ex) {
-          
-            try {
-               con1.rollback();
-                 JOptionPane.showMessageDialog(this, "Transanction Failed");
-               
-            } catch (SQLException ex1) {
-                Logger.getLogger(transfer.class.getName()).log(Level.SEVERE, null, ex1);
+
+        // Proceed with transaction
+        PreparedStatement st1 = con1.prepareStatement("UPDATE accounts SET balance = balance - ? WHERE acc_id = ?");
+        st1.setInt(1, amount);
+        st1.setString(2, faccno);
+        st1.executeUpdate();
+
+        PreparedStatement st2 = con1.prepareStatement("UPDATE accounts SET balance = balance + ? WHERE acc_id = ?");
+        st2.setInt(1, amount);
+        st2.setString(2, taccno);
+        st2.executeUpdate();
+
+        PreparedStatement st3 = con1.prepareStatement("INSERT INTO transfer(f_account, to_account, amount) VALUES (?, ?, ?)");
+        st3.setString(1, faccno);
+        st3.setString(2, taccno);
+        st3.setInt(3, amount);
+        st3.executeUpdate();
+
+        con1.commit();
+        JOptionPane.showMessageDialog(this, "Amount Transferred Successfully!");
+
+        fano.setText("");
+        toano.setText("");
+        txtamount.setText("");
+        txtbal.setText("");
+
+    } catch (ClassNotFoundException | SQLException ex) {
+        try {
+            if (con1 != null) {
+                con1.rollback();
             }
+        } catch (SQLException rollbackEx) {
+            Logger.getLogger(transfer.class.getName()).log(Level.SEVERE, null, rollbackEx);
         }
-        
-        
-        
-        
-        
+        JOptionPane.showMessageDialog(this, "Transaction failed: " + ex.getMessage());
+        Logger.getLogger(transfer.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}
         
         
         
