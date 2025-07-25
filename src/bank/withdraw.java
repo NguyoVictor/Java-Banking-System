@@ -335,14 +335,14 @@ Connection con1;
             insert.executeUpdate();
           
              
-             String sqlupdate= "update Account set balance= balance- ? where acc_id=? ";   
+             String sqlupdate= "update accounts set balance= balance- ? where acc_id=? ";   
              insert2=con1.prepareStatement(sqlupdate);
              insert2.setString(1,amount1);    
              insert2.setString(2,accno);
              insert2.executeUpdate();
              con1.commit();
            JOptionPane.showMessageDialog(null,"Amount Withdrawn...!!!!");
-            con1.commit();
+            
             
             
         }
