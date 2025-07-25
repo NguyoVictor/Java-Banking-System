@@ -260,7 +260,7 @@ Connection con1;
         try {
             Class.forName("com.mysql.jdbc.Driver");
             con1 = DriverManager.getConnection("jdbc:mysql://localhost:3307/kvbank","victor","nguyo123");
-            insert = con1.prepareStatement("select c.cust_id,c.firstname,c.lastname,a.balance from customer c,account a where c.cust_id = a.cust_id and a.acc_id = ?");
+            insert = con1.prepareStatement("select c.cust_id,c.firstname,c.lastname,a.balance from customer c,accounts a where c.cust_id = a.cust_id and a.acc_id = ?");
             insert.setString(1, accno);
             rs1 = insert.executeQuery();
 
@@ -339,7 +339,7 @@ Connection con1;
             insert.executeUpdate();
           
              
-             String sqlupdate= "update Account set balance= balance+ ? where acc_id=? ";   
+             String sqlupdate= "update accounts set balance= balance+ ? where acc_id=? ";   
              insert2=con1.prepareStatement(sqlupdate);
              insert2.setString(1,amount1);    
              insert2.setString(2,accno);
